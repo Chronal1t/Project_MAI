@@ -1,9 +1,0 @@
-Test
-
-
-git checkout -b моя-ветка
-
-git add .
-git commit -m "first commit"
-git remote add origin https://github.com/Chronal1t/Project_MAI.git
-git push -u origin моя-ветка
