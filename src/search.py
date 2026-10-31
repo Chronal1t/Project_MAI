@@ -11,7 +11,7 @@ def linear_search_by_title(tasks: list[Task], word: str) -> list[int]:
     for i, t in enumerate(tasks):
         if needle in normalize(t.title):
             result.append(i)
-    return result
+    return result # возвращает индексы задачи в списке
 
 """Линейный поиск по ID. O(n). Возвращает индекс или None."""
 def linear_search_by_id(tasks: list[Task], target_id: int) -> int | None:
@@ -25,4 +25,8 @@ def linear_search_by_id(tasks: list[Task], target_id: int) -> int | None:
 """Поиск по статусу. O(n)."""
 def linear_search_by_status(tasks: list[Task], status: str) -> list[int]:
 
-    return [i for i, t in enumerate(tasks) if t.status == status]
+    for i, t in enumerate(tasks):
+        if t.status == status:
+            return [i]
+    return []
+    
