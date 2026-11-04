@@ -29,4 +29,40 @@ def linear_search_by_status(tasks: list[Task], status: str) -> list[int]:
         if t.status == status:
             return [i]
     return []
+
+
+
+"Бинарный поиск по ID"
+
+def binary_search_by_id(sorted_task :list[Task], target_id):
+    left=0 #правый указатель 
+    right=len(sorted_task )-1 # левый указатель 
+
+    while left<=right:
+        mid=(left+right)//2 # находм середину
+        if sorted_task[mid].id==target_id:
+            return mid # нашли, возвращаем индекс
+        elif sorted_task[mid].id<=target_id:
+            left=mid+1 #  сдвигаем правее
+        else:
+            right=mid-1 # сдвигаем левее
+    return None
+
+"Бинарный поиск по title"
+def binary_search_by_title_exact(sorted_task : list[Task], title):
     
+    target=normalize(title)
+
+    left=0 #правый указатель 
+    right=len(sorted_task )-1 # левый указатель 
+    
+    while left<=right:
+        mid=(left+right)//2 # находм середину
+        cur = normalize(sorted_task[mid].title) # приводим к нормальному виду
+        if cur==target:
+            return mid  # нашли, возвращаем индекс
+        elif cur<=target:
+            left=mid+1 #  сдвигаем правее
+        else:
+            right=mid-1 # сдвигаем левее
+    return None
