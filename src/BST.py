@@ -1,5 +1,8 @@
 from src.models import Task
 
+
+
+"""Двоичное дерево поиска (Binary Search Tree) для быстрого извлечения топ-N задач."""
 class BSTNode:
     def __init__(self, task : Task):
         self.task = task
@@ -12,16 +15,17 @@ class BST :
     def __init__(self):
         self.root = None
 
-
+    """1-высший приоритет, сортировка по возрастанию приоритета,затем по дедлайну, по ID,"""
     def _get_key(self, task: Task):
         "Минус перед приоритетом нужен чтобы высший приоритет считался меньше и уходил влево"
         return (task.priority, task.deadline, task.id)
         
 
-
+    """Добавление новой задачи в дерево"""
     def insert(self, task: Task):
         self.root = self._insert(self.root, task)
 
+    """Рекурсивная вставка, спуск по дереву"""
     def _insert(self, node: BSTNode, task: Task):
         if node is None:
             return BSTNode(task)
@@ -31,12 +35,13 @@ class BST :
         else:
             node.right = self._insert(node.right, task)
         return node
-
+    """ Получение n задач с самыми высокими приоритетами """
     def  extract_top_n(self, n :int) ->list[Task]:
         result=[]
         self._fill_top_n(self.root, n, result)
         return result
 
+    
     def _fill_top_n(self, node, n, result):
         if node is None or len(result) >= n:
             return
