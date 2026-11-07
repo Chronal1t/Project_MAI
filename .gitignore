@@ -1,1 +1,17 @@
-.venv/echo __pycache__/echo *.pycecho .pytest_cache/echo .vscode/echo data/*.jsonecho !data/.gitkeep
+# C++ artifacts
+build/
+*.exe
+*.o
+*.obj
+
+# Python (на случай остатков)
+.venv/
+__pycache__/
+*.pyc
+
+# VS Code
+.vscode/
+
+# Data
+data/*.json
+!data/.gitkeep
