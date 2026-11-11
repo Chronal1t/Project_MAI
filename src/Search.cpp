@@ -69,7 +69,7 @@ vector<int> Search::linear_Search_By_Title(const vector<Task>& tasks, const stri
     
     for (int  i = 0; i < tasks.size(); ++i) 
     {
-        if (normalize(tasks[i].title).find(needle) != string::npos) 
+        if (normalize(tasks[i].name).find(needle) != string::npos) 
         // проверяем наличие слова 
         {
             result.push_back(i);
@@ -113,15 +113,15 @@ int Search::binary_Search_By_Id(const vector<Task>& sortedTasks, int targetId) {
     return -1;
 }
 
-int Search::binary_Search_By_Title_Exact(const vector<Task>& sortedTasks, const string& title) {
-    string target = normalize(title);
+int Search::binary_Search_By_Title_Exact(const vector<Task>& sortedTasks, const string& name) {
+    string target = normalize(name);
     int left=0;
     int right =  sortedTasks.size() - 1;
     
     while (left <= right) {
         int mid = left + (right - left) / 2;
 
-        string cur = normalize(sortedTasks[mid].title);
+        string cur = normalize(sortedTasks[mid].name);
         if (cur == target)
         {
             return mid;

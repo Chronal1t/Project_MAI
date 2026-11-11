@@ -15,5 +15,5 @@ public:
 
     static int binary_Search_By_Id(const vector<Task>& sortedTasks, int targetId);
 
-    static int binary_Search_By_Title_Exact(const vector<Task>& sortedTasks, const string& title);
+    static int binary_Search_By_Title_Exact(const vector<Task>& sortedTasks, const string& name);
 };

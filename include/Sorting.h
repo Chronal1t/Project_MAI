@@ -6,7 +6,7 @@
 enum class SortField { 
     ID, 
     PRIORITY, 
-    TITLE, 
+    NAME, 
     DEADLINE 
 };
 
