@@ -4,11 +4,12 @@
 using namespace std; 
 
 struct Task {
-    int id;
-    string name;
-    int priority;
+    int id;// ID
+    string name;//имя
+    int priority;//приоритет 
     string deadline; // Формат "YYYY-MM-DD"
-    string status;
-    int id_team;
-    int id_human;
+    string status;//статус
+    int id_team; //ID команды
+    int id_human;// ID человека
+    int addiction_id;//зависимость одной задачи  от другой
 };

@@ -63,7 +63,7 @@ string Search::normalize(const string& s) {
     return res;
 }*/
 
-vector<int> Search::linear_Search_By_Title(const vector<Task>& tasks, const string& word) {
+vector<int> Search::linear_Search_By_Name(const vector<Task>& tasks, const string& word) {
     string needle = normalize(word);//приводим в нормальный вид
     vector<int> result;
     
@@ -77,6 +77,33 @@ vector<int> Search::linear_Search_By_Title(const vector<Task>& tasks, const stri
     }
     return result;
 }
+
+
+vector<int> Search::linear_Search_By_Human(const vector<Task>& tasks, int humanId) {
+    vector<int> result;
+    for (size_t i = 0; i < tasks.size(); ++i)
+    {
+        if (tasks[i].id_human == humanId) 
+        {
+            result.push_back(static_cast<int>(i));
+        }
+    }
+    return result;
+}
+
+
+vector<int> Search::linear_Search_By_Team(const vector<Task>& tasks, int teamId) {
+    vector<int> result;
+    for (size_t i = 0; i < tasks.size(); ++i) 
+    {
+        if (tasks[i].id_team == teamId)
+        {
+            result.push_back(static_cast<int>(i));
+        }
+    }
+    return result;
+}
+
 
 int Search::linear_Search_By_Id(const vector<Task>& tasks, int targetId) 
 {
@@ -113,7 +140,7 @@ int Search::binary_Search_By_Id(const vector<Task>& sortedTasks, int targetId) {
     return -1;
 }
 
-int Search::binary_Search_By_Title_Exact(const vector<Task>& sortedTasks, const string& name) {
+int Search::binary_Search_By_NAME_Exact(const vector<Task>& sortedTasks, const string& name) {
     string target = normalize(name);
     int left=0;
     int right =  sortedTasks.size() - 1;
