@@ -7,7 +7,7 @@ set THIRD=third_party
 set OUT=taskmanager.exe
 
 REM 
-set SOURCES=%SRC%\main.cpp %SRC%\tasks.cpp
+set SOURCES=%SRC%\main.cpp %SRC%\tasks.cpp %SRC%\http.cpp
 
 REM  Компиляция 
 cl /nologo /std:c++17 /EHsc /O2 /W3 /wd4996 /wd4267 ^

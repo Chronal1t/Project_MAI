@@ -61,6 +61,7 @@ int filterTasks(Task arr[], int count, const string& status, int priority, Task 
         if (!status.empty() && arr[i].status != status) continue;
         if (priority > 0 && arr[i].priority != priority) continue;
         result[foundCount] = arr[i];
+        foundCount++;
     }
     return foundCount;
 }

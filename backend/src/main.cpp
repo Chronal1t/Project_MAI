@@ -4,6 +4,7 @@
 #include <winsock2.h> 
 #include <ws2tcpip.h>
 #include "tasks.h"
+#include "http.h"
 
 #pragma comment(lib, "ws2_32.lib")
 
@@ -11,6 +12,7 @@ using namespace std;
 
 int main() {
 
+    // Инициализация стартовых задач
     tasks[0] = {nextId++, "Купить молоко", 1, "2026-11-10", "todo"};
     tasks[1] = {nextId++, "Выучить сокеты", 5, "2026-11-15", "todo"};
     taskCount = 2;
@@ -22,7 +24,7 @@ int main() {
         return 1;
     }
 
-    //сокет 
+    // Создание сокета
     SOCKET serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (serverSocket == INVALID_SOCKET) {
         cout << "Socket creation failed." << endl;
@@ -33,8 +35,8 @@ int main() {
     // localhost:8080
     sockaddr_in serverAddr;
     serverAddr.sin_family = AF_INET;
-    serverAddr.sin_addr.s_addr = INADDR_ANY; // Принимать подключения с любого IP
-    serverAddr.sin_port = htons(8080);       // Порт 8080
+    serverAddr.sin_addr.s_addr = INADDR_ANY;
+    serverAddr.sin_port = htons(8080);
 
     // bind
     if (bind(serverSocket, (sockaddr*)&serverAddr, sizeof(serverAddr)) == SOCKET_ERROR) {
@@ -58,75 +60,70 @@ int main() {
         SOCKET clientSocket = accept(serverSocket, nullptr, nullptr);
         if (clientSocket == INVALID_SOCKET) continue;
 
-        char buffer[4096] = {0};
-        recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
-        string request(buffer);
-
-        // --- ПАРСИНГ ЗАПРОСА ---
-        string firstLine = request.substr(0, request.find("\r\n"));
-        string method, path, requestBody;
-        size_t firstSpace = firstLine.find(' ');
-        size_t secondSpace = firstLine.find(' ', firstSpace + 1);
-        size_t bodyStart = request.find("\r\n\r\n");
-        size_t qPos = path.find('?');
+        // Читаем запрос. Делаем буфер побольше, на случай длинных POST-запросов.
+        char buffer[8192] = {0};
+        int bytesRead = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
         
-        if (firstSpace != string::npos && secondSpace != string::npos) {
-            method = firstLine.substr(0, firstSpace);
-            path = firstLine.substr(firstSpace + 1, secondSpace - firstSpace - 1);
-            cout << "Method: " << method << " | Path: " << path << endl;
+        if (bytesRead <= 0) {
+            closesocket(clientSocket);
+            continue;
         }
 
-        if (bodyStart != string::npos) {
-            requestBody = request.substr(bodyStart + 4);
-            cout << requestBody << endl;
-        }
-
-        if (qPos != string::npos) {
-            string realPath = path.substr(0, qPos);
-            string queryString = path.substr(qPos + 1);
-        } else {
-            realPath = path;
-            queryString = "";
+        string rawRequest(buffer, bytesRead);
+        HttpRequest req = parseHttpRequest(rawRequest);
+        
+        // Логируем каждый входящий запрос в консоль
+        cout << "[" << req.method << "] " << req.path << endl;
+        if (!req.body.empty()) {
+            cout << "   Body: " << req.body << endl;
         }
 
         string response;
         string contentType = "text/html; charset=utf-8";
         string body = "";
 
-        // РОУТИНГ 
-        if (method == "GET" && path == "/") {
+        // РОУТИНГ
+        if (req.method == "GET" && req.path == "/") {
             ifstream file("../frontend/index.html");
             body = string((istreambuf_iterator<char>(file)), istreambuf_iterator<char>());
             file.close();
             if (body.empty()) body = "<h1>404 File not found</h1>";
 
-        }else if (method == "GET" && path == "/style.css") {
+        } else if (req.method == "GET" && req.path == "/style.css") {
             ifstream file("../frontend/style.css");
             body = string((istreambuf_iterator<char>(file)), istreambuf_iterator<char>());
             file.close();
             contentType = "text/css";
             if (body.empty()) body = "/* not found */";
 
-        }else if (method == "GET" && path == "/api/tasks") {
+        } else if (req.method == "GET" && req.path == "/api/tasks") {
             contentType = "application/json";
-            body = getTasksJson(tasks, taskCount);
             Task results[MAX_TASKS];
-            if (queryString.find("q=") != string::npos) {
-                string q = getFormValue(queryString, "q");
-                int count = searchTasksByTitle(tasks, taskCount, q, results);
-            } else {
-                if (getFormValue(queryString, "status") != string::npos) {
-                    priority = stoi(priorityStr);
-                } else {
-                    priority = 0;
-                }
-                int count = filterTasks(tasks, taskCount, status, priority, results);
-            }
+            int count = 0;
+            
+            string q = req.getQueryParam("q");
+            string statusStr = req.getQueryParam("status");
+            string priorityStr = req.getQueryParam("priority");
 
-        }else if(method == "POST" && path == "/api/tasks") {
-            string title = getFormValue(requestBody, "title");
-            string priorityStr = getFormValue(requestBody, "priority");
-            string deadline = getFormValue(requestBody, "deadline");
+            if (!q.empty()) {
+                count = searchTasksByTitle(tasks, taskCount, q, results);
+            } else {
+                int priority = 0;
+                if (!priorityStr.empty()) {
+                    try { priority = stoi(priorityStr); } catch(...) {}
+                }
+                count = filterTasks(tasks, taskCount, statusStr, priority, results);
+            }
+            body = getTasksJson(results, count);
+
+        } else if (req.method == "POST" && req.path == "/api/tasks") {
+            // Теперь парсим данные из формы
+            string title = req.getFormParam("title");
+            string priorityStr = req.getFormParam("priority");
+            string deadline = req.getFormParam("deadline");
+            
+            cout << "   Parsed Title: [" << title << "], Priority: [" << priorityStr << "]" << endl;
+
             if (!title.empty() && !priorityStr.empty() && taskCount < MAX_TASKS) {
                 tasks[taskCount].id = nextId++;
                 tasks[taskCount].title = title;
@@ -134,17 +131,18 @@ int main() {
                 tasks[taskCount].deadline = deadline.empty() ? "Не указан" : deadline;
                 tasks[taskCount].status = "todo";
                 taskCount++;
+                
                 contentType = "application/json";
                 body = "{\"status\":\"ok\"}";     
             } else {
                 contentType = "application/json";
-                body = "{\"status\":\"error\"}";     
+                body = "{\"error\":\"Bad Request\"}";     
                 response = "HTTP/1.1 400 Bad Request\r\n";
             }
 
-        } else if (method == "DELETE" && path.find("/api/tasks/") == 0) {
-            string idStr = path.substr(11); 
-            
+        } else if (req.method == "DELETE" && req.path.find("/api/tasks/") == 0) {
+            // Извлекаем ID из пути (например, "/api/tasks/3" -> "3")
+            string idStr = req.path.substr(11); 
             int idToDelete = 0;
             try {
                 idToDelete = stoi(idStr); 
