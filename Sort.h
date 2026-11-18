@@ -21,4 +21,4 @@ std::string getattr_string(Task &Arg1, int Arg2);
 bool getattr_bool(Task &Arg1, int Arg2);
 int Partition(Task* Arg1, std::string Arg2, int Arg3, int Arg4, bool Arg5);
 void QuickSort(Task* Arg1, std::string Arg2, int Arg3, int Arg4, bool Arg5);
-Task* InsertionSort(Task* Arg1, int Arg2, bool Arg3);
+void InsertionSort(Task* Arg1, std::string Arg2, int Arg3, bool Arg4);

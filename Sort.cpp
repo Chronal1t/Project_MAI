@@ -111,7 +111,8 @@ int Partition(Task* Arg1, string Arg2, int Arg3, int Arg4, bool Arg5)
     Task pivot = Arg1[(Arg3+Arg4)/2];
     SWAP(Arg1, (Arg3+Arg4)/2, Arg4);
     int q = Arg3;
-    int type = type_to_code(translate_to_number(Arg2));
+    int number = translate_to_number(Arg2);
+    int type = type_to_code(number);
     if(Arg5)
     {
         for (int u = Arg3; u < Arg4; u++)
@@ -119,21 +120,21 @@ int Partition(Task* Arg1, string Arg2, int Arg3, int Arg4, bool Arg5)
             switch (type)
             {
             case 1 :
-                if (getattr_int(Arg1[u], translate_to_number(Arg2)) <= getattr_int(pivot, translate_to_number(Arg2)))
+                if (getattr_int(Arg1[u], number) <= getattr_int(pivot, number))
                 {
                     SWAP(Arg1, q, u);
                     q++;
                 }// if
                 break;
             case 2 :
-                if (getattr_string(Arg1[u], translate_to_number(Arg2)) <= getattr_string(pivot, translate_to_number(Arg2)))
+                if (getattr_string(Arg1[u], number) <= getattr_string(pivot, number))
                 {
                     SWAP(Arg1, q, u);
                     q++;
                 }// if
                 break;
             case 3 :
-                if (getattr_bool(Arg1[u], translate_to_number(Arg2)) <= getattr_bool(pivot, translate_to_number(Arg2)))
+                if (getattr_bool(Arg1[u], number) <= getattr_bool(pivot, number))
                 {
                     SWAP(Arg1, q, u);
                     q++;
@@ -149,21 +150,21 @@ int Partition(Task* Arg1, string Arg2, int Arg3, int Arg4, bool Arg5)
             switch (type)
             {
             case 1 :
-                if (getattr_int(Arg1[u], translate_to_number(Arg2)) >= getattr_int(pivot, translate_to_number(Arg2)))
+                if (getattr_int(Arg1[u], number) >= getattr_int(pivot, number))
                 {
                     SWAP(Arg1, q, u);
                     q++;
                 }// if
                 break;
             case 2 :
-                if (getattr_string(Arg1[u], translate_to_number(Arg2)) >= getattr_string(pivot, translate_to_number(Arg2)))
+                if (getattr_string(Arg1[u], number) >= getattr_string(pivot, number))
                 {
                     SWAP(Arg1, q, u);
                     q++;
                 }// if
                 break;
             case 3 :
-                if (getattr_bool(Arg1[u], translate_to_number(Arg2)) >= getattr_bool(pivot, translate_to_number(Arg2)))
+                if (getattr_bool(Arg1[u], number) >= getattr_bool(pivot, number))
                 {
                     SWAP(Arg1, q, u);
                     q++;
@@ -190,11 +191,86 @@ void QuickSort(Task* Arg1, string Arg2, int Arg3, int Arg4, bool Arg5)
 }// QuickSort
 
 
-Task* InsertionSort(Task* Arg1, string Arg2, bool Arg3)
+void InsertionSort(Task* Arg1, string Arg2, int Arg3, bool Arg4)
 {
     //Arg1 - Список задач
     //Arg2 - Ключ
-    //Arg3 - (1-возрастание, 0 - убывание)
-    
-    return Arg1;
+    //Arg3 - размер массива
+    //Arg4 - (1-возрастание, 0 - убывание)
+    int number = translate_to_number(Arg2);
+    int type = type_to_code(number);
+    int j;
+    Task key;
+    if (Arg4)
+    {
+        for (int i = 1; i < Arg3; i++)
+        {
+            key = Arg1[i];
+            j = i-1;
+            while (j >= 0)
+            {
+                switch (type)
+                {
+                case 1 :
+                    if (getattr_int(Arg1[j], number) > getattr_int(key, number))
+                    {
+                        Arg1[j+1] = Arg1[j];
+                        j--;
+                    }// if
+                    break;
+                case 2 :
+                    if (getattr_string(Arg1[j], number) > getattr_string(key, number))
+                    {
+                        Arg1[j+1] = Arg1[j];
+                        j--;
+                    }// if
+                    break;
+                case 3 :
+                    if (getattr_bool(Arg1[j], number) > getattr_bool(key, number))
+                    {
+                        Arg1[j+1] = Arg1[j];
+                        j--;
+                    }// if
+                    break;
+                }//switch 
+            }// while
+            Arg1[j+1] = key;
+        }// for i
+    }// if
+    else
+    {
+        for (int i = 1; i < Arg3; i++)
+        {
+            key = Arg1[i];
+            j = i-1;
+            while (j >= 0)
+            {
+                switch (type)
+                {
+                case 1 :
+                    if (getattr_int(Arg1[j], number) < getattr_int(key, number))
+                    {
+                        Arg1[j+1] = Arg1[j];
+                        j--;
+                    }// if
+                    break;
+                case 2 :
+                    if (getattr_string(Arg1[j], number) < getattr_string(key, number))
+                    {
+                        Arg1[j+1] = Arg1[j];
+                        j--;
+                    }// if
+                    break;
+                case 3 :
+                    if (getattr_bool(Arg1[j], number) < getattr_bool(key, number))
+                    {
+                        Arg1[j+1] = Arg1[j];
+                        j--;
+                    }// if
+                    break;
+                }//switch 
+            }// while
+            Arg1[j+1] = key;
+        }// for i
+    }//else
 }//InsertionSort
