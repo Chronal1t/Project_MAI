@@ -68,6 +68,7 @@ int main() {
         size_t firstSpace = firstLine.find(' ');
         size_t secondSpace = firstLine.find(' ', firstSpace + 1);
         size_t bodyStart = request.find("\r\n\r\n");
+        size_t qPos = path.find('?');
         
         if (firstSpace != string::npos && secondSpace != string::npos) {
             method = firstLine.substr(0, firstSpace);
@@ -80,19 +81,27 @@ int main() {
             cout << requestBody << endl;
         }
 
+        if (qPos != string::npos) {
+            string realPath = path.substr(0, qPos);
+            string queryString = path.substr(qPos + 1);
+        } else {
+            realPath = path;
+            queryString = "";
+        }
+
         string response;
         string contentType = "text/html; charset=utf-8";
         string body = "";
 
         // РОУТИНГ 
         if (method == "GET" && path == "/") {
-            ifstream file("index.html");
+            ifstream file("../frontend/index.html");
             body = string((istreambuf_iterator<char>(file)), istreambuf_iterator<char>());
             file.close();
             if (body.empty()) body = "<h1>404 File not found</h1>";
 
         }else if (method == "GET" && path == "/style.css") {
-            ifstream file("style.css");
+            ifstream file("../frontend/style.css");
             body = string((istreambuf_iterator<char>(file)), istreambuf_iterator<char>());
             file.close();
             contentType = "text/css";
@@ -101,6 +110,18 @@ int main() {
         }else if (method == "GET" && path == "/api/tasks") {
             contentType = "application/json";
             body = getTasksJson(tasks, taskCount);
+            Task results[MAX_TASKS];
+            if (queryString.find("q=") != string::npos) {
+                string q = getFormValue(queryString, "q");
+                int count = searchTasksByTitle(tasks, taskCount, q, results);
+            } else {
+                if (getFormValue(queryString, "status") != string::npos) {
+                    priority = stoi(priorityStr);
+                } else {
+                    priority = 0;
+                }
+                int count = filterTasks(tasks, taskCount, status, priority, results);
+            }
 
         }else if(method == "POST" && path == "/api/tasks") {
             string title = getFormValue(requestBody, "title");

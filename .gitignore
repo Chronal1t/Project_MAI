@@ -1,0 +1,23 @@
+# Build artifacts
+*.exe
+*.obj
+*.pdb
+*.ilk
+*.exp
+*.lib
+backend/build/
+
+# SQLite database files
+backend/data/*.db
+backend/data/*.db-journal
+backend/data/*.db-wal
+backend/data/*.db-shm
+
+# IDE
+.vs/
+.vscode/
+*.user
+
+# OS
+Thumbs.db
+.DS_Store

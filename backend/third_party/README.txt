@@ -1,0 +1,1 @@
+SQLite amalgamation, version 3.XX.X, downloaded from https://sqlite.org/download.html, public domain.
