@@ -12,9 +12,16 @@ string urlDecode(const string& str) {
         if (str[i] == '+') {
             result += ' ';
         } else if (str[i] == '%' && i + 2 < str.length()) {
+            // Считываем ровно два символа после %
             string hex = str.substr(i + 1, 2);
-            char ch = (char)strtol(hex.c_str(), nullptr, 16);
-            result += ch;
+            int value = 0;
+            // Парсим 16-ричное число вручную, чтобы избежать проблем
+            for (char c : hex) {
+                if (c >= '0' && c <= '9') value = value * 16 + (c - '0');
+                else if (c >= 'A' && c <= 'F') value = value * 16 + (c - 'A' + 10);
+                else if (c >= 'a' && c <= 'f') value = value * 16 + (c - 'a' + 10);
+            }
+            result += (char)value;
             i += 2;
         } else {
             result += str[i];

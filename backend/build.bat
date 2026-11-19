@@ -7,10 +7,9 @@ set THIRD=third_party
 set OUT=taskmanager.exe
 
 REM 
-set SOURCES=%SRC%\main.cpp %SRC%\tasks.cpp %SRC%\http.cpp
-
+set SOURCES=%SRC%\main.cpp %SRC%\tasks.cpp %SRC%\http.cpp %SRC%\server.cpp %SRC%\router.cpp
 REM  Компиляция 
-cl /nologo /std:c++17 /EHsc /O2 /W3 /wd4996 /wd4267 ^
+cl /nologo /std:c++17 /EHsc /O2 /W3 /wd4996 /wd4267 /utf-8 ^
    /Fe:%OUT% ^
    %SOURCES% ^
    %THIRD%\sqlite3.c ^
