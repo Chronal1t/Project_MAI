@@ -50,24 +50,24 @@ int main()
         Create_Task( 4, "eta",    2, false, "2024-04-04", 40, 400, 4 )
     };
 
-    QuickSort(List, "id", 0, N-1, 1);
+    QuickSort(List, "id", N, 1);
     Print_Task(List, N);
-    QuickSort(List, "name", 0, N-1, 1);
+    QuickSort(List, "name", N, 1);
     Print_Task(List, N);
-    QuickSort(List, "priority", 0, N-1, 1);
+    QuickSort(List, "priority", N, 1);
     Print_Task(List, N);
-    QuickSort(List, "status", 0, N-1, 1);
+    QuickSort(List, "status", N, 1);
     Print_Task(List, N);
-    QuickSort(List, "deadline", 0, N-1, 1);
+    QuickSort(List, "deadline", N, 1);
     Print_Task(List, N);
-    QuickSort(List, "id_human", 0, N-1, 1);
+    QuickSort(List, "id_human", N, 1);
     Print_Task(List, N);
-    QuickSort(List, "id_team", 0, N-1, 1);
+    QuickSort(List, "id_team", N, 1);
     Print_Task(List, N);
-    QuickSort(List, "addiction_id", 0, N-1, 1);
+    QuickSort(List, "addiction_id", N, 1);
     Print_Task(List, N);
 
-    
+    cout <<'\n';
     InsertionSort(List, "id", N, 1);
     Print_Task(List, N);
     InsertionSort(List, "name", N, 1);
@@ -83,6 +83,24 @@ int main()
     InsertionSort(List, "id_team", N, 1);
     Print_Task(List, N);
     InsertionSort(List, "addiction_id", N, 1);
+    Print_Task(List, N);
+
+    cout <<'\n';
+    MergeSort(List, "id", N, 1);
+    Print_Task(List, N);
+    MergeSort(List, "name", N, 1);
+    Print_Task(List, N);
+    MergeSort(List, "priority", N, 1);
+    Print_Task(List, N);
+    MergeSort(List, "status", N, 1);
+    Print_Task(List, N);
+    MergeSort(List, "deadline", N, 1);
+    Print_Task(List, N);
+    MergeSort(List, "id_human", N, 1);
+    Print_Task(List, N);
+    MergeSort(List, "id_team", N, 1);
+    Print_Task(List, N);
+    MergeSort(List, "addiction_id", N, 1);
     Print_Task(List, N);
     return 0;
 }// main

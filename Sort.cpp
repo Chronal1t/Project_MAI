@@ -3,6 +3,9 @@
 
 using namespace std;
 
+#define INFINITY 1000000000
+
+
 void SWAP(Task* Arg1, int Arg2, int Arg3)
 {
     Task temp = Arg1[Arg2];
@@ -178,7 +181,7 @@ int Partition(Task* Arg1, string Arg2, int Arg3, int Arg4, bool Arg5)
 }// Partition
 
 
-void QuickSort(Task* Arg1, string Arg2, int Arg3, int Arg4, bool Arg5)
+void QuickSort_start(Task* Arg1, string Arg2, int Arg3, int Arg4, bool Arg5)
 {
     if (Arg3 >= Arg4)
     {
@@ -186,9 +189,15 @@ void QuickSort(Task* Arg1, string Arg2, int Arg3, int Arg4, bool Arg5)
     }// if
     
     int q = Partition(Arg1, Arg2, Arg3, Arg4, Arg5);
-    QuickSort(Arg1, Arg2, Arg3, q-1, Arg5);
-    QuickSort(Arg1, Arg2, q+1, Arg4, Arg5);
+    QuickSort_start(Arg1, Arg2, Arg3, q-1, Arg5);
+    QuickSort_start(Arg1, Arg2, q+1, Arg4, Arg5);
+}// QuickSort_start
+
+void QuickSort(Task* Arg1, std::string Arg2, int Arg3, bool Arg4)
+{
+    QuickSort_start(Arg1, Arg2, 0, Arg3-1, Arg4);
 }// QuickSort
+
 
 
 void InsertionSort(Task* Arg1, string Arg2, int Arg3, bool Arg4)
@@ -274,3 +283,162 @@ void InsertionSort(Task* Arg1, string Arg2, int Arg3, bool Arg4)
         }// for i
     }//else
 }//InsertionSort
+
+
+void Merge_sort_start(Task* Arg1, string Arg2, int Arg3, int Arg4, bool Arg5)
+{
+    if (Arg3 >= Arg4)
+    {
+        return ;
+    }// if
+
+    int q = (Arg4+Arg3)/2;
+    Merge_sort_start(Arg1, Arg2, Arg3,q, Arg5);
+    Merge_sort_start(Arg1, Arg2, 1+q, Arg4, Arg5);
+    Merge(Arg1, Arg2, Arg3, q, Arg4, Arg5);
+
+}//Merge_sort_start
+
+void Merge(Task* Arg1, string Arg2, int Arg3, int Arg4, int Arg5, bool Arg6)
+{
+    int n1 = Arg4 - Arg3 + 1; 
+    int n2 = Arg5 - Arg4;     
+    int type = type_to_code(translate_to_number(Arg2));
+    int number = translate_to_number(Arg2);
+    Task B[n1+1];
+    Task C[n2+1];
+
+    Task Dop_max, Dop_min;
+    Dop_max.id = INFINITY;
+    Dop_max.priority = INFINITY;
+    Dop_max.id_human = INFINITY;
+    Dop_max.addiction_id = INFINITY;
+    Dop_max.id_team = INFINITY;
+    Dop_max.status = true;
+    Dop_max.deadline = "9999999-12-31";
+    Dop_max.name = "ZZZZZZZZZZZZZZZZZZZZZZZZZZZ";
+    
+    Dop_min.id = -INFINITY;
+    Dop_min.priority = -INFINITY;
+    Dop_min.id_human = -INFINITY;
+    Dop_min.addiction_id = -INFINITY;
+    Dop_min.id_team = -INFINITY;
+    Dop_min.status = false;
+    Dop_min.deadline = "0000-00-00";
+    Dop_min.name = "AAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
+
+    for (int k = 0; k < n1; k++)
+    {
+        B[k] = Arg1[Arg3 + k];
+    }
+    
+    for (int k = 0; k < n2; k++)
+    {
+        C[k] = Arg1[Arg4 + 1 + k];
+    }
+    
+    int i = 0;
+    int j = 0;
+
+    if (Arg6)
+    {
+        B[n1] = Dop_max;
+        C[n2] = Dop_max;
+        for (int k = Arg3; k <= Arg5; k++)
+        {   
+            switch(type)
+            {
+                case 1:
+                    if(getattr_int(B[i], number) <= getattr_int(C[j], number))
+                    {
+                        Arg1[k] = B[i];
+                        i+=1;
+                    }// if
+                    else
+                    {
+                        Arg1[k] = C[j];
+                        j+=1;
+                    }// else
+                    break;
+                case 2:
+                    if(getattr_string(B[i], number) <= getattr_string(C[j], number))
+                    {
+                        Arg1[k] = B[i];
+                        i+=1;
+                    }// if
+                    else
+                    {
+                        Arg1[k] = C[j];
+                        j+=1;
+                    }// else
+                    break;
+                case 3:
+                    if(getattr_bool(B[i], number) <= getattr_bool(C[j], number))
+                    {
+                        Arg1[k] = B[i];
+                        i+=1;
+                    }// if
+                    else
+                    {
+                        Arg1[k] = C[j];
+                        j+=1;
+                    }// else
+                    break;
+            }// switch
+        }// for k
+    }//if
+    else
+    {
+        B[n1] = Dop_min;
+        C[n2] = Dop_min;
+        for (int k = Arg3; k <= Arg5; k++)
+        {   
+            switch(type)
+            {
+                case 1:
+                    if(getattr_int(B[i], number) >= getattr_int(C[j], number))
+                    {
+                        Arg1[k] = B[i];
+                        i+=1;
+                    }// if
+                    else
+                    {
+                        Arg1[k] = C[j];
+                        j+=1;
+                    }// else
+                    break;
+                case 2:
+                    if(getattr_string(B[i], number) >= getattr_string(C[j], number))
+                    {
+                        Arg1[k] = B[i];
+                        i+=1;
+                    }// if
+                    else
+                    {
+                        Arg1[k] = C[j];
+                        j+=1;
+                    }// else
+                    break;
+                case 3:
+                    if(getattr_bool(B[i], number) >= getattr_bool(C[j], number))
+                    {
+                        Arg1[k] = B[i];
+                        i+=1;
+                    }// if
+                    else
+                    {
+                        Arg1[k] = C[j];
+                        j+=1;
+                    }// else
+                    break;
+            }// switch
+        }// for k
+    }// else
+}//Merge
+
+
+void MergeSort(Task* Arg1, string Arg2, int Arg3, bool Arg4)
+{
+    Merge_sort_start(Arg1, Arg2, 0, Arg3-1, Arg4);
+}//MergeSort
