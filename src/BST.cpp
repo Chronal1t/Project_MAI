@@ -1,3 +1,6 @@
+
+
+
 #include "BST.h"
 #include <tuple>
 
@@ -36,17 +39,17 @@ void BST::insert(const Task& task)
 // Рекурсивная вставка
 void BST::insert(BSTNode*& node, const Task& task)
 {
-    if (node == nullptr) 
+    if (node == nullptr)
     {
         // Нашли пустое место — создаем новый узел
-        node = new BSTNode(task); 
+        node = new BSTNode(task);
         return;
     }
-    
+
     if (getKey(task) < getKey(node->task))
     {
         insert(node->left, task); // Идем влево
-    } 
+    }
     else
     {
         insert(node->right, task); // Идем вправо
@@ -54,30 +57,36 @@ void BST::insert(BSTNode*& node, const Task& task)
 }
 
 // Публичный метод извлечения топ-N
-vector<Task> BST::extractTopN(int n)
+Task* BST::extractTopN(int n, int& count)
 {
-    vector<Task> result;
-    fillTopN(root, n, result);
+    count = 0;
+    if (n <= 0 || root == nullptr)
+    {
+        return nullptr;
+    }
+
+    Task* result = new Task[n];
+    fillTopN(root, n, result, count);
     return result;
 }
 
 // Рекурсивный обход (Лево -> Узел -> Право)
-void BST::fillTopN(BSTNode* node, int n, vector<Task>& result)
+void BST::fillTopN(BSTNode* node, int n, Task* result, int& count)
 {
-    if (node == nullptr || result.size() >= static_cast<size_t>(n))
+    if (node == nullptr || count >= n)
     {
         return;
     }
-    
+
     // 1. Идем влево (там самые высокие приоритеты)
-    fillTopN(node->left, n, result);
-    
+    fillTopN(node->left, n, result, count);
+
     // 2. Берем текущий узел (если еще не набрали N)
-    if (result.size() < static_cast<size_t>(n))
+    if (count < n)
     {
-        result.push_back(node->task);
+        result[count++] = node->task;
     }
-    
+
     // 3. Идем вправо
-    fillTopN(node->right, n, result);
+    fillTopN(node->right, n, result, count);
 }
