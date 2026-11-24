@@ -10,9 +10,9 @@ using namespace std;
 
 void test_linear_search() {
     const Task tasks[] = {
-        {1, "  Buy MILK  ", 3, "2026-01-01", "todo", 1, 1},
-        {2, "Fix car", 2, "2026-01-02", "todo", 1, 1},
-        {3, "milk the cow", 1, "2026-01-03", "todo", 2, 2}
+        {1, "  Buy MILK  ", 3, "2026-01-01", false, 1, 1},
+        {2, "Fix car", 2, "2026-01-02", false, 1, 1},
+        {3, "milk the cow", 1, "2026-01-03", false, 2, 2}
     };
 
     // Ищем "milk" (должен найти 1-ю и 3-ю задачу, регистр и пробелы не важны)
@@ -37,10 +37,11 @@ void test_linear_search() {
 void test_binary_search() {
     // ВАЖНО: Для бинарного поиска список должен быть отсортирован по ID!
     const Task sortedTasks[] = {
-        {1, "Task A", 3, "2026-01-01", "todo", 1, 1},
-        {2, "Task B", 2, "2026-01-02", "todo", 1, 1},
-        {3, "Task C", 1, "2026-01-03", "todo", 2, 2},
-        {4, "Task D", 5, "2026-01-04", "todo", 2, 2}
+        {1, "Task A", 3, "2026-01-01", false, 1, 1},
+        {2, "Task B", 2, "2026-01-02", false, 1, 1},
+        {3, "Task C", 1, "2026-01-03", false, 2, 2},
+        {4, "Task D", 5, "2026-01-04", false, 2, 2}
+
     };
 
     // Ищем существующий ID=3 (индекс 2)
@@ -60,9 +61,9 @@ void test_bst() {
     BST tree;
 
     // Вставляем в разном порядке
-    tree.insert({1, "Low", 3, "2026-03-01", "todo", 1, 1});
-    tree.insert({2, "High", 1, "2026-01-01", "todo", 1, 1});
-    tree.insert({3, "Medium", 2, "2026-02-01", "todo", 1, 1});
+    tree.insert({1, "Low", 3, "2026-03-01", false, 1, 1});
+    tree.insert({2, "High", 1, "2026-01-01", false, 1, 1});
+    tree.insert({3, "Medium", 2, "2026-02-01", false, 1, 1});
 
     // Достаем топ-2
     int count;

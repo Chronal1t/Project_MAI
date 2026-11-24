@@ -10,7 +10,7 @@ struct Task {
     string name;//имя
     int priority;//приоритет
     string deadline; // Формат "YYYY-MM-DD"
-    string status;//статус
+    bool status;//статус
     int id_team; //ID команды
     int id_human;// ID человека
     int addiction_id;//зависимость одной задачи  от другой

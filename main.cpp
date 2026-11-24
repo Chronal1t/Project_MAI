@@ -30,7 +30,7 @@ Task* generateRandomTasks(int n) {
         t.name = "Task " + to_string(i);
         t.priority = prioDist(gen);
         t.deadline = "2026-01-01";
-        t.status = "todo";
+        t.status = false;
         t.id_team = 1;
         t.id_human = 1;
         t.addiction_id = 0;
